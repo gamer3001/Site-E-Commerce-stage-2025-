@@ -627,27 +627,198 @@
             transform: translateY(-2px);
         }
 
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            padding: 2rem;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .mobile-menu a {
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
             nav {
                 display: none;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .hero {
+                padding: 3rem 1rem;
             }
 
             .hero h1 {
                 font-size: 2rem;
             }
 
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero::before,
+            .hero::after {
+                font-size: 3rem;
+            }
+
+            .btn-primary {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .products-section {
+                padding: 2rem 1rem;
+            }
+
+            .products-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .products-subtitle {
+                font-size: 1rem;
+            }
+
             .products-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .product-card {
+                margin: 0 auto;
+                max-width: 400px;
+            }
+
+            .view-all-btn {
+                padding: 0.75rem 2rem;
+                font-size: 1rem;
             }
 
             .chat-window {
-                width: calc(100% - 2rem);
-                right: 1rem;
+                width: calc(100% - 1rem);
+                right: 0.5rem;
+                left: 0.5rem;
+                bottom: 5rem;
             }
 
-            .search-box input {
-                min-width: 150px;
+            .chat-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+
+            .modal-image {
+                height: 300px;
+            }
+
+            .modal-info h2 {
+                font-size: 1.5rem;
+            }
+
+            .modal-price {
+                font-size: 2rem;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .header-icons {
+                gap: 0.5rem;
+            }
+
+            .icon-btn {
+                padding: 0.4rem;
+            }
+        }
+
+        /* Très petits écrans */
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .products-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .product-name {
+                font-size: 1.1rem;
+            }
+
+            .product-price {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -656,11 +827,17 @@
     <!-- Header -->
     <header>
         <div class="header-content">
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <svg width="28" height="28" fill="none" stroke="#d946a6" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
             <div class="logo">LuxeMarket</div>
             
             <nav>
                 <a href="#accueil">Accueil</a>
-                <a href="#produits">Produits</a>
+                <a href="vitrine.html">Collection</a>
                 <a href="#apropos">À propos</a>
                 <a href="#contact">Contact</a>
             </nav>
@@ -689,6 +866,15 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">&times;</button>
+        <a href="#accueil" onclick="toggleMobileMenu()">Accueil</a>
+        <a href="vitrine.html" onclick="toggleMobileMenu()">Collection</a>
+        <a href="#apropos" onclick="toggleMobileMenu()">À propos</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="accueil">
@@ -798,6 +984,12 @@
         }
 
         filteredProducts = [...products];
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
 
         // Afficher seulement les 6 premiers produits sur la page d'accueil
         function displayProducts() {

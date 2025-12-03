@@ -366,6 +366,12 @@
     <!-- Header -->
     <header>
         <div class="header-content">
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <svg width="28" height="28" fill="none" stroke="#d946a6" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
             <a href="index.html" class="logo">LuxeMarket</a>
             
             <nav>
@@ -384,6 +390,15 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">&times;</button>
+        <a href="index.html" onclick="toggleMobileMenu()">Accueil</a>
+        <a href="vitrine.html" onclick="toggleMobileMenu()">Collection</a>
+        <a href="#apropos" onclick="toggleMobileMenu()">À propos</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+    </div>
 
     <!-- Page Header -->
     <div class="page-header">
@@ -453,6 +468,12 @@
         }
 
         filteredProducts = [...products];
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
 
         // Afficher les produits
         function displayProducts() {
