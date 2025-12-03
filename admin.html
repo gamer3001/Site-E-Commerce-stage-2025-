@@ -349,9 +349,15 @@
     </div>
 
     <script>
+        // ===== CONFIGURATION API =====
+        const API_URL = 'https://TON-PROJET.vercel.app/api/products'; // Tu remplaceras après déploiement
+        const ADMIN_PASSWORD = 'admin123'; // Mot de passe pour l'API
+        
         // Default credentials (À CHANGER EN PRODUCTION!)
         const ADMIN_USERNAME = 'admin';
-        const ADMIN_PASSWORD = 'admin123';
+        const ADMIN_PASSWORD_LOGIN = 'admin123';
+
+        let currentFileSha = null;
 
         // Check if already logged in
         if (localStorage.getItem('adminLoggedIn') === 'true') {
@@ -364,7 +370,7 @@
             const password = document.getElementById('password').value;
             const error = document.getElementById('loginError');
 
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD_LOGIN) {
                 localStorage.setItem('adminLoggedIn', 'true');
                 showDashboard();
                 error.style.display = 'none';
@@ -402,8 +408,59 @@
             }
         }
 
+        // Charger les produits depuis l'API
+        async function loadProductsFromAPI() {
+            try {
+                const response = await fetch(API_URL);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentFileSha = data.sha;
+                    return data.products;
+                } else {
+                    console.error('Erreur de chargement:', response.status);
+                    return [];
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                return [];
+            }
+        }
+
+        // Sauvegarder les produits via l'API
+        async function saveProductsToAPI(products) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': ADMIN_PASSWORD
+                    },
+                    body: JSON.stringify({
+                        products: products,
+                        sha: currentFileSha
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentFileSha = data.sha;
+                    return true;
+                } else {
+                    const errorData = await response.json();
+                    console.error('Erreur de sauvegarde:', errorData);
+                    alert('Erreur lors de la sauvegarde: ' + (errorData.error || 'Erreur inconnue'));
+                    return false;
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur de connexion à l\'API: ' + error.message);
+                return false;
+            }
+        }
+
         // Add product
-        function addProduct() {
+        async function addProduct() {
             const name = document.getElementById('productName').value;
             const price = document.getElementById('productPrice').value;
             const category = document.getElementById('productCategory').value;
@@ -415,9 +472,15 @@
                 return;
             }
 
+            // Afficher un message de chargement
+            const successMsg = document.getElementById('successMessage');
+            successMsg.textContent = '⏳ Ajout en cours...';
+            successMsg.classList.add('active');
+
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const products = JSON.parse(localStorage.getItem('products') || '[]');
+            reader.onload = async function(e) {
+                const products = await loadProductsFromAPI();
+                
                 const newProduct = {
                     id: Date.now(),
                     name: name,
@@ -428,28 +491,34 @@
                 };
 
                 products.push(newProduct);
-                localStorage.setItem('products', JSON.stringify(products));
+                
+                const success = await saveProductsToAPI(products);
 
-                // Show success message
-                const successMsg = document.getElementById('successMessage');
-                successMsg.classList.add('active');
+                if (success) {
+                    successMsg.textContent = '✅ Produit ajouté avec succès !';
+                    successMsg.style.background = '#10b981';
+                    
+                    // Reset form
+                    document.getElementById('productName').value = '';
+                    document.getElementById('productPrice').value = '';
+                    document.getElementById('productDescription').value = '';
+                    document.getElementById('productImage').value = '';
+                    document.getElementById('imagePreview').classList.remove('active');
+
+                    loadProducts();
+                } else {
+                    successMsg.textContent = '❌ Erreur lors de l\'ajout';
+                    successMsg.style.background = '#ef4444';
+                }
+
                 setTimeout(() => successMsg.classList.remove('active'), 3000);
-
-                // Reset form
-                document.getElementById('productName').value = '';
-                document.getElementById('productPrice').value = '';
-                document.getElementById('productDescription').value = '';
-                document.getElementById('productImage').value = '';
-                document.getElementById('imagePreview').classList.remove('active');
-
-                loadProducts();
             };
             reader.readAsDataURL(imageFile);
         }
 
         // Load products
-        function loadProducts() {
-            const products = JSON.parse(localStorage.getItem('products') || '[]');
+        async function loadProducts() {
+            const products = await loadProductsFromAPI();
             const productsList = document.getElementById('productsList');
             const productCount = document.getElementById('productCount');
 
@@ -477,12 +546,17 @@
         }
 
         // Delete product
-        function deleteProduct(id) {
+        async function deleteProduct(id) {
             if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
-                let products = JSON.parse(localStorage.getItem('products') || '[]');
+                let products = await loadProductsFromAPI();
                 products = products.filter(p => p.id !== id);
-                localStorage.setItem('products', JSON.stringify(products));
-                loadProducts();
+                const success = await saveProductsToAPI(products);
+                
+                if (success) {
+                    loadProducts();
+                } else {
+                    alert('Erreur lors de la suppression');
+                }
             }
         }
 

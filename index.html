@@ -966,14 +966,33 @@
     </footer>
 
     <script>
-        // Charger les produits depuis le stockage ou utiliser des exemples
-        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        // URL de l'API
+        const API_URL = 'https://TON-PROJET.vercel.app/api/products'; // Tu remplaceras après déploiement
+        
+        // Charger les produits depuis l'API
+        let products = [];
         let filteredProducts = [];
         let currentProductId = null;
-        
-        // Si aucun produit, afficher des produits d'exemple
-        if (products.length === 0) {
-            products = [
+
+        async function loadProductsFromAPI() {
+            try {
+                const response = await fetch(API_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.products;
+                } else {
+                    console.error('Erreur de chargement:', response.status);
+                    return getDefaultProducts();
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                return getDefaultProducts();
+            }
+        }
+
+        // Produits par défaut si GitHub ne fonctionne pas
+        function getDefaultProducts() {
+            return [
                 { id: 1, name: 'Chanel N°5 Eau de Parfum', price: '139.00€', image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400', category: 'Parfums', description: 'Le parfum iconique de Chanel. Notes florales aldéhydées intemporelles. Flacon 100ml.' },
                 { id: 2, name: 'Sac Louis Vuitton Speedy', price: '1,250.00€', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400', category: 'Sacs', description: 'Sac à main iconique en toile monogram. État excellent. Authentique avec certificat.' },
                 { id: 3, name: 'Lunettes Dior So Real', price: '425.00€', image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400', category: 'Lunettes', description: 'Lunettes de soleil avant-gardistes. Monture métallique dorée. Protection UV400.' },
@@ -983,7 +1002,12 @@
             ];
         }
 
-        filteredProducts = [...products];
+        // Initialiser les produits
+        async function initProducts() {
+            products = await loadProductsFromGitHub();
+            filteredProducts = [...products];
+            displayProducts();
+        }
 
         // Toggle mobile menu
         function toggleMobileMenu() {
