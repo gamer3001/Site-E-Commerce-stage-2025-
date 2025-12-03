@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Complète - LuxeMarket</title>
+    <link rel="stylesheet" href="index.html">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background-color: #fef7f5;
+            color: #2d2d2d;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe8f0 100%);
+            box-shadow: 0 2px 15px rgba(219, 112, 147, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #ffc0cb;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #d946a6;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        nav a:hover {
+            color: #ff6b9d;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: #ffe8f0;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #d946a6 50%, #a855f7 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Filters */
+        .filters-section {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #d946a6;
+            background: white;
+            color: #d946a6;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.3);
+        }
+
+        /* Products Grid */
+        .products-container {
+            max-width: 1280px;
+            margin: 2rem auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .products-count {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 30px rgba(217, 70, 166, 0.25);
+            transform: translateY(-5px);
+            border-color: #ffc0cb;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-category {
+            color: #d946a6;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            color: #2d2d2d;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(217, 70, 166, 0.3);
+        }
+
+        .btn-add-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .modal-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2d2d2d;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .modal-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+
+        .modal-description {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-modal-primary {
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">LuxeMarket</a>
+            
+            <nav>
+                <a href="index.html">Accueil</a>
+                <a href="vitrine.html">Collection</a>
+                <a href="#apropos">À propos</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <div class="header-icons">
+                <button class="icon-btn" onclick="window.location.href='index.html'">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>✨ Notre Collection Complète</h1>
+        <p>Découvrez tous nos produits de luxe et de mode haut de gamme</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <button class="filter-btn active" onclick="filterProducts('Tous')">Tous</button>
+        <button class="filter-btn" onclick="filterProducts('Parfums')">Parfums</button>
+        <button class="filter-btn" onclick="filterProducts('Maroquinerie')">Maroquinerie</button>
+        <button class="filter-btn" onclick="filterProducts('Sacs')">Sacs à main</button>
+        <button class="filter-btn" onclick="filterProducts('Chaussures')">Chaussures</button>
+        <button class="filter-btn" onclick="filterProducts('Bijoux')">Bijoux</button>
+        <button class="filter-btn" onclick="filterProducts('Montres')">Montres</button>
+        <button class="filter-btn" onclick="filterProducts('Accessoires')">Accessoires</button>
+    </div>
+
+    <!-- Products Container -->
+    <div class="products-container">
+        <p class="products-count"><span id="productCount">0</span> produits disponibles</p>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-body">
+                <div>
+                    <img id="modalImage" class="modal-image" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <span id="modalCategory" class="modal-category"></span>
+                    <h2 id="modalName"></h2>
+                    <div id="modalPrice" class="modal-price"></div>
+                    <p id="modalDescription" class="modal-description"></p>
+                    <div class="modal-actions">
+                        <button class="btn-modal btn-modal-primary" onclick="addToCartFromModal()">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Charger les produits
+        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        let filteredProducts = [];
+        let currentProductId = null;
+        let currentFilter = 'Tous';
+
+        if (products.length === 0) {
+            products = [
+                { id: 1, name: 'Chanel N°5 Eau de Parfum', price: '139.00€', image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400', category: 'Parfums', description: 'Le parfum iconique de Chanel. Notes florales aldéhydées intemporelles. Flacon 100ml.' },
+                { id: 2, name: 'Sac Louis Vuitton Speedy', price: '1,250.00€', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400', category: 'Sacs', description: 'Sac à main iconique en toile monogram. État excellent. Authentique avec certificat.' },
+                { id: 3, name: 'Lunettes Dior So Real', price: '425.00€', image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400', category: 'Lunettes', description: 'Lunettes de soleil avant-gardistes. Monture métallique dorée. Protection UV400.' },
+                { id: 4, name: 'Montre Rolex Submariner', price: '8,500.00€', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400', category: 'Montres', description: 'Montre de plongée automatique. Acier inoxydable. Boîte et papiers inclus.' },
+                { id: 5, name: 'Escarpins Louboutin', price: '795.00€', image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400', category: 'Chaussures', description: 'Escarpins signature à semelle rouge. Cuir verni noir. Talon 10cm. Pointure 38.' },
+                { id: 6, name: 'Portefeuille Hermès', price: '680.00€', image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400', category: 'Maroquinerie', description: 'Portefeuille compact en cuir Epsom. Couleur étoupe. Multiples emplacements cartes.' }
+            ];
+        }
+
+        filteredProducts = [...products];
+
+        // Afficher les produits
+        function displayProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            const productCount = document.getElementById('productCount');
+            
+            productsGrid.innerHTML = '';
+            productCount.textContent = filteredProducts.length;
+
+            if (filteredProducts.length === 0) {
+                productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 2rem;">Aucun produit dans cette catégorie</p>';
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openProductModal(product.id);
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-footer">
+                            <div class="product-price">${product.price}</div>
+                            <button class="btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})">Ajouter</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(card);
+            });
+        }
+
+        // Filtrer les produits
+        function filterProducts(category) {
+            currentFilter = category;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === category) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (category === 'Tous') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(p => p.category === category);
+            }
+            
+            displayProducts();
+        }
+
+        // Ouvrir la modale
+        function openProductModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            currentProductId = productId;
+            
+            document.getElementById('modalImage').src = product.image;
+            document.getElementById('modalName').textContent = product.name;
+            document.getElementById('modalPrice').textContent = product.price;
+            document.getElementById('modalCategory').textContent = product.category;
+            document.getElementById('modalDescription').textContent = product.description || 'Aucune description disponible.';
+            
+            document.getElementById('productModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fermer la modale
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentProductId = null;
+        }
+
+        // Ajouter au panier
+        function addToCart(productId) {
+            alert('Produit ajouté au panier !');
+        }
+
+        function addToCartFromModal() {
+            if (currentProductId) {
+                addToCart(currentProductId);
+                closeModal();
+            }
+        }
+
+        // Fermer modal en cliquant dehors
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Actualiser les produits
+        setInterval(() => {
+            const newProducts = JSON.parse(localStorage.getItem('products') || '[]');
+            if (newProducts.length !== products.length) {
+                products = newProducts.length > 0 ? newProducts : products;
+                filterProducts(currentFilter);
+            }
+        }, 2000);
+
+        displayProducts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - LuxeMarket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Login Screen */
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            width: auto;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .error {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Admin Dashboard */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            color: #667eea;
+        }
+
+        .btn-logout {
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+
+        .admin-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .add-product-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .add-product-form h2 {
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+
+        .products-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .products-list h2 {
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .product-item:hover {
+            border-color: #667eea;
+        }
+
+        .product-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .product-item-info {
+            flex: 1;
+        }
+
+        .product-item-info h3 {
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-item-info p {
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .product-item-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .product-item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .image-preview.active {
+            display: block;
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .admin-content {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <h1>🔐 Connexion Admin</h1>
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" placeholder="admin">
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" onclick="login()">Se connecter</button>
+        <p class="error" id="loginError">Identifiants incorrects</p>
+        <p style="margin-top: 1rem; text-align: center; color: #6b7280; font-size: 0.875rem;">
+            Par défaut: admin / admin123
+        </p>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-container" id="adminDashboard">
+        <div class="admin-header">
+            <h1>📊 Tableau de bord Admin</h1>
+            <button class="btn-logout" onclick="logout()">Déconnexion</button>
+        </div>
+
+        <div class="admin-content">
+            <!-- Add Product Form -->
+            <div class="add-product-form">
+                <h2>➕ Ajouter un produit</h2>
+                <div class="success-message" id="successMessage">
+                    ✅ Produit ajouté avec succès !
+                </div>
+                <div class="form-group">
+                    <label for="productName">Nom du produit *</label>
+                    <input type="text" id="productName" placeholder="ex: iPhone 15 Pro">
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Prix (€) *</label>
+                    <input type="number" id="productPrice" step="0.01" placeholder="ex: 999.99">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Catégorie *</label>
+                    <select id="productCategory">
+                        <option value="Parfums">Parfums</option>
+                        <option value="Maroquinerie">Maroquinerie</option>
+                        <option value="Vetements">Vêtements</option>
+                        <option value="Sacs">Sacs à main</option>
+                        <option value="Chaussures">Chaussures</option>
+                        <option value="Bijoux">Bijoux</option>
+                        <option value="Montres">Montres</option>
+                        <option value="Accessoires">Accessoires</option>
+                        <option value="Cosmetiques">Cosmétiques</option>
+                        <option value="Lunettes">Lunettes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description *</label>
+                    <textarea id="productDescription" placeholder="Décrivez votre produit en détail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Image du produit *</label>
+                    <input type="file" id="productImage" accept="image/*" onchange="previewImage()">
+                    <img id="imagePreview" class="image-preview">
+                </div>
+                <button class="btn btn-success" onclick="addProduct()">Publier le produit</button>
+            </div>
+
+            <!-- Products List -->
+            <div class="products-list">
+                <h2>📦 Mes produits (<span id="productCount">0</span>)</h2>
+                <div id="productsList">
+                    <!-- Products will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default credentials (À CHANGER EN PRODUCTION!)
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'admin123';
+
+        // Check if already logged in
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            showDashboard();
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('loginError');
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showDashboard();
+                error.style.display = 'none';
+            } else {
+                error.style.display = 'block';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'none';
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadProducts();
+        }
+
+        // Preview image
+        function previewImage() {
+            const file = document.getElementById('productImage').files[0];
+            const preview = document.getElementById('imagePreview');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Add product
+        function addProduct() {
+            const name = document.getElementById('productName').value;
+            const price = document.getElementById('productPrice').value;
+            const category = document.getElementById('productCategory').value;
+            const description = document.getElementById('productDescription').value;
+            const imageFile = document.getElementById('productImage').files[0];
+
+            if (!name || !price || !description || !imageFile) {
+                alert('Veuillez remplir tous les champs obligatoires et ajouter une image');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const products = JSON.parse(localStorage.getItem('products') || '[]');
+                const newProduct = {
+                    id: Date.now(),
+                    name: name,
+                    price: price + '€',
+                    category: category,
+                    description: description,
+                    image: e.target.result
+                };
+
+                products.push(newProduct);
+                localStorage.setItem('products', JSON.stringify(products));
+
+                // Show success message
+                const successMsg = document.getElementById('successMessage');
+                successMsg.classList.add('active');
+                setTimeout(() => successMsg.classList.remove('active'), 3000);
+
+                // Reset form
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productDescription').value = '';
+                document.getElementById('productImage').value = '';
+                document.getElementById('imagePreview').classList.remove('active');
+
+                loadProducts();
+            };
+            reader.readAsDataURL(imageFile);
+        }
+
+        // Load products
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('products') || '[]');
+            const productsList = document.getElementById('productsList');
+            const productCount = document.getElementById('productCount');
+
+            productCount.textContent = products.length;
+
+            if (products.length === 0) {
+                productsList.innerHTML = '<p style="text-align: center; color: #6b7280;">Aucun produit pour le moment</p>';
+                return;
+            }
+
+            productsList.innerHTML = products.map(product => `
+                <div class="product-item">
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-item-info">
+                        <h3>${product.name}</h3>
+                        <p><strong>Catégorie:</strong> ${product.category}</p>
+                        <p><strong>Description:</strong> ${product.description.substring(0, 100)}${product.description.length > 100 ? '...' : ''}</p>
+                        <p class="product-item-price">${product.price}</p>
+                    </div>
+                    <div class="product-item-actions">
+                        <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Delete product
+        function deleteProduct(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+                let products = JSON.parse(localStorage.getItem('products') || '[]');
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('products', JSON.stringify(products));
+                loadProducts();
+            }
+        }
+
+        // Allow Enter key to login
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>

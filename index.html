@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeMarket - Boutique de luxe et mode haut de gamme</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background-color: #fef7f5;
+            color: #2d2d2d;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe8f0 100%);
+            box-shadow: 0 2px 15px rgba(219, 112, 147, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #ffc0cb;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #d946a6;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', sans-serif;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #ff6b9d;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #d946a6, #ff6b9d);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            outline: none;
+            min-width: 250px;
+        }
+
+        .search-box input:focus {
+            border-color: #d946a6;
+            box-shadow: 0 0 0 3px rgba(217, 70, 166, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            pointer-events: none;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: #ffe8f0;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 9999px;
+            min-width: 1.25rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(217, 70, 166, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #ff6b9d 0%, #d946a6 50%, #a855f7 100%);
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '✨';
+            position: absolute;
+            font-size: 6rem;
+            opacity: 0.1;
+            top: 10%;
+            left: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '💎';
+            position: absolute;
+            font-size: 6rem;
+            opacity: 0.1;
+            bottom: 10%;
+            right: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 300;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #d946a6;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #fff5f7;
+        }
+
+        /* Products Section */
+        .products-section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .products-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .products-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .view-all-btn {
+            display: block;
+            margin: 3rem auto 0;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.3);
+            text-decoration: none;
+        }
+
+        .view-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(217, 70, 166, 0.4);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 30px rgba(217, 70, 166, 0.25);
+            transform: translateY(-5px);
+            border-color: #ffc0cb;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-category {
+            color: #d946a6;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            color: #2d2d2d;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(217, 70, 166, 0.3);
+        }
+
+        .btn-add-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.4);
+        }
+
+        /* Chat Button */
+        .chat-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(217, 70, 166, 0.4);
+            transition: all 0.3s;
+            z-index: 90;
+        }
+
+        .chat-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(217, 70, 166, 0.5);
+        }
+
+        /* Chat Window */
+        .chat-window {
+            position: fixed;
+            bottom: 6rem;
+            right: 1.5rem;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 90;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .message.vendeur {
+            background: #e5e7eb;
+            align-self: flex-start;
+        }
+
+        .message.client {
+            background: #2563eb;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            outline: none;
+        }
+
+        .chat-input input:focus {
+            border-color: #2563eb;
+        }
+
+        .chat-send-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .chat-send-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-top: 3px solid #d946a6;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+        }
+
+        /* Product Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.7);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .modal-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        .modal-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+
+        .modal-description {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-modal-primary {
+            background: linear-gradient(135deg, #d946a6 0%, #ff6b9d 100%);
+            color: white;
+        }
+
+        .btn-modal-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-modal-secondary {
+            background: linear-gradient(135deg, #a855f7 0%, #d946a6 100%);
+            color: white;
+        }
+
+        .btn-modal-secondary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-window {
+                width: calc(100% - 2rem);
+                right: 1rem;
+            }
+
+            .search-box input {
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">LuxeMarket</div>
+            
+            <nav>
+                <a href="#accueil">Accueil</a>
+                <a href="#produits">Produits</a>
+                <a href="#apropos">À propos</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <div class="header-icons">
+                <div class="search-box">
+                    <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Rechercher un produit..." onkeyup="searchProducts()">
+                </div>
+
+                <button class="icon-btn" id="cartBtn">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+
+                <button class="icon-btn">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <h1>Bienvenue sur LuxeMarket</h1>
+        <p>Votre boutique de luxe et de mode haut de gamme</p>
+        <button class="btn-primary">Découvrir la collection</button>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section" id="produits">
+        <h2>💎 Collection Signature</h2>
+        <p class="products-subtitle">Nos produits phares sélectionnés avec soin</p>
+        <div class="products-grid" id="productsGrid">
+            <!-- Les produits seront ajoutés ici par JavaScript -->
+        </div>
+        <a href="vitrine.html" class="view-all-btn">Voir toute la collection ✨</a>
+    </section>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-body">
+                <div>
+                    <img id="modalImage" class="modal-image" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <span id="modalCategory" class="modal-category"></span>
+                    <h2 id="modalName"></h2>
+                    <div id="modalPrice" class="modal-price"></div>
+                    <p id="modalDescription" class="modal-description"></p>
+                    <div class="modal-actions">
+                        <button class="btn-modal btn-modal-primary" onclick="addToCartFromModal()">
+                            Ajouter au panier
+                        </button>
+                        <button class="btn-modal btn-modal-secondary" onclick="openChat()">
+                            Contacter le vendeur
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Button -->
+    <button class="chat-btn" id="chatBtn">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+    </button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3>Chat avec le vendeur</h3>
+            <button class="chat-close" id="chatClose">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message vendeur">Bonjour ! Comment puis-je vous aider ?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Tapez votre message...">
+            <button class="chat-send-btn" id="sendBtn">Envoyer</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LuxeMarket</h3>
+                <p style="color: #9ca3af;">Votre destination pour le luxe et la mode haut de gamme</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liens rapides</h3>
+                <a href="#produits">Produits</a>
+                <a href="#apropos">À propos</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p style="color: #9ca3af;">Email: contact@luxemarket.fr</p>
+                <p style="color: #9ca3af;">Tél: 01 23 45 67 89</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LuxeMarket. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Charger les produits depuis le stockage ou utiliser des exemples
+        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        let filteredProducts = [];
+        let currentProductId = null;
+        
+        // Si aucun produit, afficher des produits d'exemple
+        if (products.length === 0) {
+            products = [
+                { id: 1, name: 'Chanel N°5 Eau de Parfum', price: '139.00€', image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400', category: 'Parfums', description: 'Le parfum iconique de Chanel. Notes florales aldéhydées intemporelles. Flacon 100ml.' },
+                { id: 2, name: 'Sac Louis Vuitton Speedy', price: '1,250.00€', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400', category: 'Sacs', description: 'Sac à main iconique en toile monogram. État excellent. Authentique avec certificat.' },
+                { id: 3, name: 'Lunettes Dior So Real', price: '425.00€', image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400', category: 'Lunettes', description: 'Lunettes de soleil avant-gardistes. Monture métallique dorée. Protection UV400.' },
+                { id: 4, name: 'Montre Rolex Submariner', price: '8,500.00€', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400', category: 'Montres', description: 'Montre de plongée automatique. Acier inoxydable. Boîte et papiers inclus.' },
+                { id: 5, name: 'Escarpins Louboutin', price: '795.00€', image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400', category: 'Chaussures', description: 'Escarpins signature à semelle rouge. Cuir verni noir. Talon 10cm. Pointure 38.' },
+                { id: 6, name: 'Portefeuille Hermès', price: '680.00€', image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400', category: 'Maroquinerie', description: 'Portefeuille compact en cuir Epsom. Couleur étoupe. Multiples emplacements cartes.' }
+            ];
+        }
+
+        filteredProducts = [...products];
+
+        // Afficher seulement les 6 premiers produits sur la page d'accueil
+        function displayProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
+            
+            // Limiter à 6 produits pour la page d'accueil
+            const featuredProducts = filteredProducts.slice(0, 6);
+            
+            if (featuredProducts.length === 0) {
+                productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 2rem;">Aucun produit trouvé</p>';
+                return;
+            }
+
+            featuredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.style.cursor = 'pointer';
+                card.onclick = () => openProductModal(product.id);
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-footer">
+                            <div class="product-price">${product.price}</div>
+                            <button class="btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})">Ajouter</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(card);
+            });
+        }
+
+        // Fonction de recherche
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm) ||
+                    (product.description && product.description.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            displayProducts();
+        }
+
+        // Ouvrir la modale produit
+        function openProductModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            currentProductId = productId;
+            
+            document.getElementById('modalImage').src = product.image;
+            document.getElementById('modalName').textContent = product.name;
+            document.getElementById('modalPrice').textContent = product.price;
+            document.getElementById('modalCategory').textContent = product.category;
+            document.getElementById('modalDescription').textContent = product.description || 'Aucune description disponible.';
+            
+            document.getElementById('productModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fermer la modale
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentProductId = null;
+        }
+
+        // Ajouter au panier depuis la modale
+        function addToCartFromModal() {
+            if (currentProductId) {
+                addToCart(currentProductId);
+                closeModal();
+            }
+        }
+
+        // Ouvrir le chat depuis la modale
+        function openChat() {
+            closeModal();
+            document.getElementById('chatWindow').classList.add('active');
+        }
+
+        // Fermer la modale en cliquant en dehors
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Actualiser les produits toutes les 2 secondes pour détecter les nouveaux
+        setInterval(() => {
+            const newProducts = JSON.parse(localStorage.getItem('products') || '[]');
+            if (newProducts.length !== products.length) {
+                products = newProducts.length > 0 ? newProducts : products;
+                filteredProducts = [...products];
+                displayProducts();
+            }
+        }, 2000);
+
+        displayProducts();
+
+        // Gestion du panier
+        let cartCount = 0;
+        const cartBadge = document.getElementById('cartBadge');
+
+        function addToCart(productId) {
+            cartCount++;
+            cartBadge.textContent = cartCount;
+            alert('Produit ajouté au panier !');
+        }
+
+        // Gestion du chat
+        const chatBtn = document.getElementById('chatBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatClose = document.getElementById('chatClose');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        chatBtn.addEventListener('click', () => {
+            chatWindow.classList.add('active');
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+        });
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text) {
+                // Ajouter le message du client
+                const clientMsg = document.createElement('div');
+                clientMsg.className = 'message client';
+                clientMsg.textContent = text;
+                chatMessages.appendChild(clientMsg);
+
+                messageInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Réponse automatique du vendeur
+                setTimeout(() => {
+                    const vendeurMsg = document.createElement('div');
+                    vendeurMsg.className = 'message vendeur';
+                    vendeurMsg.textContent = 'Merci pour votre message ! Je vous réponds dès que possible.';
+                    chatMessages.appendChild(vendeurMsg);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
