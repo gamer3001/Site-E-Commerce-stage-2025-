@@ -11,7 +11,8 @@ const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_RE
 const allowedOrigins = [
   'https://gamer3001.github.io',
   'http://localhost:5500',
-  'http://127.0.0.1:5500'
+  'http://127.0.0.1:5500',
+  'https://site-e-commerce-stage-2025-r8ol-ow2p70y87-gamer3001s-projects.vercel.app'
 ];
 
 function setCorsHeaders(origin) {
