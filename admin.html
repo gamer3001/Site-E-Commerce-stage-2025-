@@ -436,7 +436,8 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
+                        'X-Master-Key': JSONBIN_API_KEY,
+                        'X-Bin-Meta': 'false'
                     },
                     body: JSON.stringify(products)
                 });
@@ -444,8 +445,9 @@
                 if (response.ok) {
                     return true;
                 } else {
-                    console.error('Erreur de sauvegarde:', response.status);
-                    alert('Erreur lors de la sauvegarde');
+                    const errorText = await response.text();
+                    console.error('Erreur de sauvegarde:', response.status, errorText);
+                    alert('Erreur lors de la sauvegarde: ' + response.status);
                     return false;
                 }
             } catch (error) {
