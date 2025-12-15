@@ -1021,13 +1021,13 @@
             mobileMenu.classList.toggle('active');
         }
 
-        // Afficher seulement les 6 premiers produits sur la page d'accueil
+        // Afficher les produits (tous pour l'instant)
         function displayProducts() {
             const productsGrid = document.getElementById('productsGrid');
             productsGrid.innerHTML = '';
             
-            // Limiter à 6 produits pour la page d'accueil
-            const featuredProducts = filteredProducts.slice(0, 6);
+            // Afficher TOUS les produits au lieu de seulement 6
+            const featuredProducts = filteredProducts;
             
             if (featuredProducts.length === 0) {
                 productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 2rem;">Aucun produit trouvé</p>';
