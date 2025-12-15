@@ -966,20 +966,26 @@
     </footer>
 
     <script>
-        // URL de l'API
-        const API_URL = 'https://site-e-commerce-stage-2025-r8ol-ow2p70y87-gamer3001s-projects.vercel.app/api/products';
+        // Configuration JSONBin
+        const JSONBIN_API_KEY = '$2a$10$sb9vPSJ/BS0FOTRDyc4hP.WPRq42wJoUwTrsarZwyTSrde5Ow3ys2'; // X-Access-Key
+        const JSONBIN_BIN_ID = '694035c5d0ea881f402b3fcf';
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
         
-        // Charger les produits depuis l'API
+        // Charger les produits depuis JSONBin
         let products = [];
         let filteredProducts = [];
         let currentProductId = null;
 
         async function loadProductsFromAPI() {
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(JSONBIN_URL + '/latest', {
+                    headers: {
+                        'X-Access-Key': JSONBIN_API_KEY
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
-                    return data.products;
+                    return data.record || getDefaultProducts();
                 } else {
                     console.error('Erreur de chargement:', response.status);
                     return getDefaultProducts();
@@ -1004,7 +1010,7 @@
 
         // Initialiser les produits
         async function initProducts() {
-            products = await loadProductsFromGitHub();
+            products = await loadProductsFromAPI();
             filteredProducts = [...products];
             displayProducts();
         }
