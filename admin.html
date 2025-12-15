@@ -349,15 +349,14 @@
     </div>
 
     <script>
-        // ===== CONFIGURATION API =====
-        const API_URL = 'https://site-e-commerce-stage-2025-r8ol-ow2p70y87-gamer3001s-projects.vercel.app/api/products';
-        const ADMIN_PASSWORD = 'admin123'; // Mot de passe pour l'API
+        // ===== CONFIGURATION JSONBIN =====
+        const JSONBIN_API_KEY = '$2a$10$c8PuGy3f7Z9XNgC.kkqwAeUufYgyDzzDYV/Qm9WJIdOVCP9.TLjBC';
+        const JSONBIN_BIN_ID = '694033ded0ea881f402b3c1b';
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
         
         // Default credentials (À CHANGER EN PRODUCTION!)
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD_LOGIN = 'admin123';
-
-        let currentFileSha = null;
 
         // Check if already logged in
         if (localStorage.getItem('adminLoggedIn') === 'true') {
@@ -408,15 +407,18 @@
             }
         }
 
-        // Charger les produits depuis l'API
+        // Charger les produits depuis JSONBin
         async function loadProductsFromAPI() {
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(JSONBIN_URL + '/latest', {
+                    headers: {
+                        'X-Master-Key': JSONBIN_API_KEY
+                    }
+                });
 
                 if (response.ok) {
                     const data = await response.json();
-                    currentFileSha = data.sha;
-                    return data.products;
+                    return data.record || [];
                 } else {
                     console.error('Erreur de chargement:', response.status);
                     return [];
@@ -427,34 +429,28 @@
             }
         }
 
-        // Sauvegarder les produits via l'API
+        // Sauvegarder les produits sur JSONBin
         async function saveProductsToAPI(products) {
             try {
-                const response = await fetch(API_URL, {
+                const response = await fetch(JSONBIN_URL, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Admin-Password': ADMIN_PASSWORD
+                        'X-Master-Key': JSONBIN_API_KEY
                     },
-                    body: JSON.stringify({
-                        products: products,
-                        sha: currentFileSha
-                    })
+                    body: JSON.stringify(products)
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    currentFileSha = data.sha;
                     return true;
                 } else {
-                    const errorData = await response.json();
-                    console.error('Erreur de sauvegarde:', errorData);
-                    alert('Erreur lors de la sauvegarde: ' + (errorData.error || 'Erreur inconnue'));
+                    console.error('Erreur de sauvegarde:', response.status);
+                    alert('Erreur lors de la sauvegarde');
                     return false;
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Erreur de connexion à l\'API: ' + error.message);
+                alert('Erreur de connexion: ' + error.message);
                 return false;
             }
         }
