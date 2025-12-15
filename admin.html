@@ -536,7 +536,8 @@
                 price: price + '€',
                 category: category,
                 description: description,
-                image: compressedImage // Image déjà compressée
+                image: compressedImage,
+                featured: false // Par défaut pas mis en avant
             };
 
             products.push(newProduct);
@@ -564,6 +565,23 @@
             setTimeout(() => successMsg.classList.remove('active'), 3000);
         }
 
+        // Toggle featured status
+        async function toggleFeatured(id) {
+            let products = await loadProductsFromAPI();
+            const product = products.find(p => p.id === id);
+            
+            if (product) {
+                product.featured = !product.featured;
+                const success = await saveProductsToAPI(products);
+                
+                if (success) {
+                    loadProducts();
+                } else {
+                    alert('Erreur lors de la mise à jour');
+                }
+            }
+        }
+
         // Load products
         async function loadProducts() {
             const products = await loadProductsFromAPI();
@@ -587,6 +605,9 @@
                         <p class="product-item-price">${product.price}</p>
                     </div>
                     <div class="product-item-actions">
+                        <button class="btn ${product.featured ? 'btn-success' : 'btn btn-secondary'}" onclick="toggleFeatured(${product.id})" style="background: ${product.featured ? '#10b981' : '#6b7280'}; color: white; padding: 0.5rem 1rem; width: auto; margin-bottom: 0.5rem;">
+                            ${product.featured ? '⭐ Mis en avant' : '☆ Mettre en avant'}
+                        </button>
                         <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
                     </div>
                 </div>
