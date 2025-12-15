@@ -350,7 +350,7 @@
 
     <script>
         // ===== CONFIGURATION JSONBIN =====
-        const JSONBIN_API_KEY = '$2a$10$c8PuGy3f7Z9XNgC.kkqwAeUufYgyDzzDYV/Qm9WJIdOVCP9.TLjBC';
+        const JSONBIN_API_KEY = '$2a$10$sb9vPSJ/BS0FOTRDyc4hP.WPRq42wJoUwTrsarZwyTSrde5Ow3ys2'; // X-Access-Key
         const JSONBIN_BIN_ID = '694035c5d0ea881f402b3fcf';
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
         
@@ -392,16 +392,53 @@
             loadProducts();
         }
 
-        // Preview image
+        // Preview et compression de l'image
         function previewImage() {
             const file = document.getElementById('productImage').files[0];
             const preview = document.getElementById('imagePreview');
 
             if (file) {
+                // Vérifier la taille du fichier
+                if (file.size > 5 * 1024 * 1024) { // Plus de 5MB
+                    alert('⚠️ Image trop lourde ! Choisissez une image de moins de 5 MB.');
+                    document.getElementById('productImage').value = '';
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.add('active');
+                    // Créer une image pour la compression
+                    const img = new Image();
+                    img.onload = function() {
+                        // Compresser l'image à max 800px de largeur
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // Redimensionner si trop grand
+                        const maxWidth = 800;
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Convertir en base64 avec compression (qualité 0.7)
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        
+                        // Afficher l'aperçu
+                        preview.src = compressedBase64;
+                        preview.classList.add('active');
+                        
+                        // Stocker l'image compressée pour l'upload
+                        preview.dataset.compressed = compressedBase64;
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -412,7 +449,7 @@
             try {
                 const response = await fetch(JSONBIN_URL + '/latest', {
                     headers: {
-                        'X-Master-Key': JSONBIN_API_KEY
+                        'X-Access-Key': JSONBIN_API_KEY
                     }
                 });
 
@@ -436,7 +473,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY,
+                        'X-Access-Key': JSONBIN_API_KEY,
                         'X-Bin-Meta': 'false'
                     },
                     body: JSON.stringify(products)
@@ -447,7 +484,13 @@
                 } else {
                     const errorText = await response.text();
                     console.error('Erreur de sauvegarde:', response.status, errorText);
-                    alert('Erreur lors de la sauvegarde: ' + response.status);
+                    
+                    // Message plus clair pour l'utilisateur
+                    if (response.status === 403) {
+                        alert('⚠️ Limite de requêtes atteinte. Attendez 30 secondes et réessayez.');
+                    } else {
+                        alert('Erreur lors de la sauvegarde: ' + response.status);
+                    }
                     return false;
                 }
             } catch (error) {
@@ -464,6 +507,7 @@
             const category = document.getElementById('productCategory').value;
             const description = document.getElementById('productDescription').value;
             const imageFile = document.getElementById('productImage').files[0];
+            const preview = document.getElementById('imagePreview');
 
             if (!name || !price || !description || !imageFile) {
                 alert('Veuillez remplir tous les champs obligatoires et ajouter une image');
@@ -472,46 +516,52 @@
 
             // Afficher un message de chargement
             const successMsg = document.getElementById('successMessage');
-            successMsg.textContent = '⏳ Ajout en cours...';
+            successMsg.textContent = '⏳ Compression et ajout en cours...';
             successMsg.classList.add('active');
 
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const products = await loadProductsFromAPI();
-                
-                const newProduct = {
-                    id: Date.now(),
-                    name: name,
-                    price: price + '€',
-                    category: category,
-                    description: description,
-                    image: e.target.result
-                };
+            // Utiliser l'image compressée depuis le preview
+            const compressedImage = preview.dataset.compressed;
 
-                products.push(newProduct);
-                
-                const success = await saveProductsToAPI(products);
+            if (!compressedImage) {
+                alert('Erreur: Image non chargée. Réessayez.');
+                successMsg.classList.remove('active');
+                return;
+            }
 
-                if (success) {
-                    successMsg.textContent = '✅ Produit ajouté avec succès !';
-                    successMsg.style.background = '#10b981';
-                    
-                    // Reset form
-                    document.getElementById('productName').value = '';
-                    document.getElementById('productPrice').value = '';
-                    document.getElementById('productDescription').value = '';
-                    document.getElementById('productImage').value = '';
-                    document.getElementById('imagePreview').classList.remove('active');
-
-                    loadProducts();
-                } else {
-                    successMsg.textContent = '❌ Erreur lors de l\'ajout';
-                    successMsg.style.background = '#ef4444';
-                }
-
-                setTimeout(() => successMsg.classList.remove('active'), 3000);
+            const products = await loadProductsFromAPI();
+            
+            const newProduct = {
+                id: Date.now(),
+                name: name,
+                price: price + '€',
+                category: category,
+                description: description,
+                image: compressedImage // Image déjà compressée
             };
-            reader.readAsDataURL(imageFile);
+
+            products.push(newProduct);
+            
+            const success = await saveProductsToAPI(products);
+
+            if (success) {
+                successMsg.textContent = '✅ Produit ajouté avec succès !';
+                successMsg.style.background = '#10b981';
+                
+                // Reset form
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productDescription').value = '';
+                document.getElementById('productImage').value = '';
+                document.getElementById('imagePreview').classList.remove('active');
+                delete preview.dataset.compressed;
+
+                loadProducts();
+            } else {
+                successMsg.textContent = '❌ Erreur lors de l\'ajout';
+                successMsg.style.background = '#ef4444';
+            }
+
+            setTimeout(() => successMsg.classList.remove('active'), 3000);
         }
 
         // Load products
